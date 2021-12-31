@@ -1,0 +1,9 @@
+
+version: '3.4'
+
+services:
+  testfunctionprh:
+    image: testfunctionprh
+    build:
+      context: .
+      dockerfile: ./Dockerfile
