@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace testfunctionprh
 {
@@ -31,6 +32,8 @@ namespace testfunctionprh
             string getJackAir = req.Query["JackAir"];
             string trackTail = req.Query["TailNumber"];
             string jhaInsiderTrading = req.Query["JHAInsiderTrading"];
+            string getBanks = req.Query["getBanks"];  //https://banks.data.fdic.gov/docs/#api_endpoints
+            string getSlackChannelConversation = req.Query["getConversation"];
 
             string responseMessage = "";
 
@@ -129,6 +132,31 @@ namespace testfunctionprh
                 }
             }
 
+            if (!string.IsNullOrEmpty(getBanks))
+            {
+                try
+                {
+
+                    responseMessage = getBankData(getBanks);
+
+                }
+                catch
+                {
+                    responseMessage = "OOPS: got an error";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(getSlackChannelConversation))
+            {
+                try
+                {
+                    responseMessage = getSlackConversation("I am a test");
+                }
+                catch
+                {
+                    responseMessage = "OOPS: got an error";
+                }
+            }
             return new OkObjectResult(responseMessage);
         }
 
@@ -255,6 +283,39 @@ namespace testfunctionprh
 
             return responseMeta;
 
+        }
+
+        public static string getBankData(string typeOfStatus)  // https://stackoverflow.com/questions/27108264/how-to-properly-make-a-http-web-get-request
+        {
+            var web = new WebClient();
+            var responseString = "";
+
+            if (typeOfStatus == "BAD")
+            {
+                var url = "https://www.fdic.gov/resources/resolutions/bank-failures/failed-bank-list/banklist.csv";
+
+                responseString = web.DownloadString(url);
+                return responseString;
+            }
+
+            else if (typeOfStatus == "ALL")
+            {
+                var url = "https://s3-us-gov-west-1.amazonaws.com/cg-2e5c99a6-e282-42bf-9844-35f5430338a5/downloads/institutions.csv";
+                
+                responseString = web.DownloadString(url);
+                return responseString;
+            }
+
+            // this is a failsafe
+            responseString = "Ooops found nothing";
+
+            return responseString;
+
+        }
+
+        public static string getSlackConversation(string Channel)
+        {
+            return null;
         }
 
         public static string makeHTML()

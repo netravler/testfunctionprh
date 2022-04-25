@@ -1,5 +1,7 @@
 {
-    "recommendations": [
-        "tiibun.vscode-docker-ws"
-    ]
+  "recommendations": [
+    "ms-azuretools.vscode-azurefunctions",
+    "ms-dotnettools.csharp",
+    "tiibun.vscode-docker-ws"
+  ]
 }
